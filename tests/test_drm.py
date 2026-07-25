@@ -1,6 +1,12 @@
 from pathlib import Path
 
-from bazzite_auto_switch.drm import find_connectors, find_drm_cards, read_text
+from bazzite_auto_switch.drm import (
+    find_connectors,
+    find_drm_cards,
+    read_enabled,
+    read_status,
+    read_text,
+)
 
 
 def test_find_drm_cards_empty(tmp_path: Path) -> None:
@@ -66,3 +72,37 @@ def test_read_text(tmp_path: Path) -> None:
 
 def test_read_text_missing_file(tmp_path: Path) -> None:
     assert read_text(tmp_path, "status") is None
+
+
+def test_read_status_connected(tmp_path: Path) -> None:
+    (tmp_path / "status").write_text("connected\n")
+
+    assert read_status(tmp_path) is True
+
+
+def test_read_status_disconnected(tmp_path: Path) -> None:
+    (tmp_path / "status").write_text("disconnected\n")
+
+    assert read_status(tmp_path) is False
+
+
+def test_read_status_unknown(tmp_path: Path) -> None:
+    (tmp_path / "status").write_text("unknown\n")
+
+    assert read_status(tmp_path) is None
+
+
+def test_read_enabled_enabled(tmp_path: Path) -> None:
+    (tmp_path / "enabled").write_text("enabled\n")
+
+    assert read_enabled(tmp_path) is True
+
+
+def test_read_enabled_disabled(tmp_path: Path) -> None:
+    (tmp_path / "enabled").write_text("disabled\n")
+
+    assert read_enabled(tmp_path) is False
+
+
+def test_read_enabled_missing(tmp_path: Path) -> None:
+    assert read_enabled(tmp_path) is None

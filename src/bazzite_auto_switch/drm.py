@@ -8,6 +8,17 @@ from pathlib import Path
 
 DRM_PATH = Path("/sys/class/drm")
 
+_STATUS_MAP: dict[str, bool | None] = {
+    "connected": True,
+    "disconnected": False,
+    "unknown": None,
+}
+
+_ENABLED_MAP: dict[str, bool | None] = {
+    "enabled": True,
+    "disabled": False,
+}
+
 
 def find_drm_cards(base_path: Path = DRM_PATH) -> tuple[Path, ...]:
     """
@@ -51,3 +62,33 @@ def read_text(path: Path, filename: str) -> str | None:
         return (path / filename).read_text(encoding="utf-8").strip()
     except OSError:
         return None
+
+
+def _read_mapped_value(
+    path: Path,
+    filename: str,
+    mapping: dict[str, bool | None],
+) -> bool | None:
+    """
+    Read a sysfs attribute and map its value.
+    """
+    value = read_text(path, filename)
+
+    if value is None:
+        return None
+
+    return mapping.get(value)
+
+
+def read_status(connector: Path) -> bool | None:
+    """
+    Return the connector status.
+    """
+    return _read_mapped_value(connector, "status", _STATUS_MAP)
+
+
+def read_enabled(connector: Path) -> bool | None:
+    """
+    Return whether the connector is enabled.
+    """
+    return _read_mapped_value(connector, "enabled", _ENABLED_MAP)
