@@ -17,6 +17,7 @@ class ConnectorType(StrEnum):
     USB_C = "usb-c"
     UNKNOWN = "unknown"
 
+
 @dataclass(slots=True, frozen=True)
 class Connector:
     """Represents a single display connector."""
