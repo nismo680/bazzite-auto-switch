@@ -6,6 +6,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from bazzite_auto_switch.drm_parser import parse_connector_name
+from bazzite_auto_switch.models import Connector
+
 DRM_PATH = Path("/sys/class/drm")
 
 _STATUS_MAP: dict[str, bool | None] = {
@@ -92,3 +95,21 @@ def read_enabled(connector: Path) -> bool | None:
     Return whether the connector is enabled.
     """
     return _read_mapped_value(connector, "enabled", _ENABLED_MAP)
+
+
+def read_connector(path: Path) -> Connector:
+    """
+    Read a DRM connector.
+    """
+    connector_type, number = parse_connector_name(path.name)
+
+    return Connector(
+        drm_id=path.name,
+        connector_type=connector_type,
+        number=number,
+        connected=read_status(path),
+        enabled=read_enabled(path),
+        manufacturer=None,
+        monitor_name=None,
+        serial_number=None,
+    )

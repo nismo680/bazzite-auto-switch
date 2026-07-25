@@ -26,15 +26,16 @@ class Connector:
     connector_type: ConnectorType
     number: int
 
-    connected: bool
+    connected: bool | None
+    enabled: bool | None
 
     monitor_name: str | None = None
     manufacturer: str | None = None
     serial_number: str | None = None
 
-    width: int | None = None
-    height: int | None = None
-    refresh_rate: float | None = None
+    @property
+    def active(self) -> bool:
+        return self.connected is True and self.enabled is True
 
 
 @dataclass(slots=True, frozen=True)

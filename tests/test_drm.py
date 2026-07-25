@@ -3,10 +3,12 @@ from pathlib import Path
 from bazzite_auto_switch.drm import (
     find_connectors,
     find_drm_cards,
+    read_connector,
     read_enabled,
     read_status,
     read_text,
 )
+from bazzite_auto_switch.models import ConnectorType
 
 
 def test_find_drm_cards_empty(tmp_path: Path) -> None:
@@ -106,3 +108,16 @@ def test_read_enabled_disabled(tmp_path: Path) -> None:
 
 def test_read_enabled_missing(tmp_path: Path) -> None:
     assert read_enabled(tmp_path) is None
+
+
+def test_read_connector(tmp_path: Path) -> None:
+    (tmp_path / "status").write_text("connected\n")
+    (tmp_path / "enabled").write_text("enabled\n")
+
+    connector = read_connector(tmp_path)
+
+    assert connector.drm_id == tmp_path.name
+    assert connector.connector_type is ConnectorType.UNKNOWN
+    assert connector.connected is True
+    assert connector.enabled is True
+    assert connector.active is True
