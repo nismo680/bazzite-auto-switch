@@ -12,17 +12,11 @@ DRM_PATH = Path("/sys/class/drm")
 def find_drm_cards(base_path: Path = DRM_PATH) -> tuple[Path, ...]:
     """
     Return all DRM card directories.
-
-    Example:
-        (
-            Path("/sys/class/drm/card0"),
-            Path("/sys/class/drm/card1"),
-        )
     """
     if not base_path.exists():
         return ()
 
-    cards = tuple(
+    return tuple(
         sorted(
             entry
             for entry in base_path.iterdir()
@@ -30,4 +24,19 @@ def find_drm_cards(base_path: Path = DRM_PATH) -> tuple[Path, ...]:
         )
     )
 
-    return cards
+
+def find_connectors(card: Path) -> tuple[Path, ...]:
+    """
+    Return all connector directories belonging to a DRM card.
+    """
+    drm_path = card.parent
+
+    prefix = f"{card.name}-"
+
+    return tuple(
+        sorted(
+            entry
+            for entry in drm_path.iterdir()
+            if entry.is_dir() and entry.name.startswith(prefix)
+        )
+    )
