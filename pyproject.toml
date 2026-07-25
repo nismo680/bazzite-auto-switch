@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bazzite-auto-switch"
+version = "0.1.0.dev0"
+description = "Automatically switch between Bazzite Gaming Mode and KDE Desktop."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+    { name = "nismo680" }
+]
+
+dependencies = [
+    "pyudev>=0.24",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy",
+    "pytest",
+    "ruff",
+]
+
+[project.scripts]
+bazzite-auto-switch = "bazzite_auto_switch.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bazzite_auto_switch"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "UP",
+    "B",
+]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["bazzite_auto_switch"]
