@@ -27,3 +27,16 @@ def decode_manufacturer(raw: bytes) -> str:
     value = int.from_bytes(raw, byteorder="big")
 
     return "".join(chr(((value >> shift) & 0x1F) + ord("A") - 1) for shift in (10, 5, 0))
+
+
+def parse_edid(edid: bytes) -> MonitorInfo:
+    """
+    Parse the information needed from an EDID.
+    """
+    if len(edid) < 128:
+        raise ValueError("EDID must be at least 128 bytes.")
+
+    return MonitorInfo(
+        manufacturer=decode_manufacturer(edid[8:10]),
+        monitor_name=None,
+    )

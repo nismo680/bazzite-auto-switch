@@ -1,4 +1,4 @@
-from bazzite_auto_switch.edid import MonitorInfo, decode_manufacturer
+from bazzite_auto_switch.edid import MonitorInfo, decode_manufacturer, parse_edid
 
 
 def test_monitor_info_defaults() -> None:
@@ -31,3 +31,22 @@ def test_decode_manufacturer_invalid_length() -> None:
 
     with pytest.raises(ValueError):
         decode_manufacturer(b"\x10")
+
+
+def test_parse_edid_manufacturer() -> None:
+    edid = bytearray(128)
+
+    # DEL
+    edid[8:10] = bytes.fromhex("10 AC")
+
+    info = parse_edid(bytes(edid))
+
+    assert info.manufacturer == "DEL"
+    assert info.monitor_name is None
+
+
+def test_parse_edid_too_short() -> None:
+    import pytest
+
+    with pytest.raises(ValueError):
+        parse_edid(b"\x00" * 127)
