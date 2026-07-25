@@ -8,7 +8,7 @@ from pathlib import Path
 
 from bazzite_auto_switch.drm_parser import parse_connector_name
 from bazzite_auto_switch.edid import parse_edid
-from bazzite_auto_switch.models import Connector
+from bazzite_auto_switch.models import GPU, Connector
 
 DRM_PATH = Path("/sys/class/drm")
 
@@ -123,6 +123,24 @@ def read_connector(path: Path) -> Connector:
         manufacturer=manufacturer,
         monitor_name=monitor_name,
     )
+
+
+def read_gpu(card: Path) -> GPU:
+    """
+    Read a DRM GPU and all of its connectors.
+    """
+    return GPU(
+        drm_id=card.name,
+        name=card.name,
+        connectors=tuple(read_connector(connector) for connector in find_connectors(card)),
+    )
+
+
+def read_gpus(base_path: Path = DRM_PATH) -> tuple[GPU, ...]:
+    """
+    Read all DRM GPUs.
+    """
+    return tuple(read_gpu(card) for card in find_drm_cards(base_path))
 
 
 def read_edid(connector: Path) -> bytes | None:

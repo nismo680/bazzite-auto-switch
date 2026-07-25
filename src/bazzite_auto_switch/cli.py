@@ -1,20 +1,31 @@
+from __future__ import annotations
+
 import argparse
 
-from .version import __version__
 
-
-def main() -> None:
+def main() -> int:
     parser = argparse.ArgumentParser(
         prog="bazzite-auto-switch",
-        description="Automatic session switching for Bazzite.",
     )
 
-    parser.add_argument(
-        "--version",
-        action="version",
-        version=f"%(prog)s {__version__}",
+    subparsers = parser.add_subparsers(
+        dest="command",
+        required=True,
     )
 
-    parser.parse_args()
+    subparsers.add_parser(
+        "list",
+        help="List detected GPUs and connectors.",
+    )
 
-    print("Bazzite Auto Switch")
+    args = parser.parse_args()
+
+    if args.command == "list":
+        return cmd_list()
+
+    return 1
+
+
+def cmd_list() -> int:
+    print("Not implemented yet.")
+    return 0
