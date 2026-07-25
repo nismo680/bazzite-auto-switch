@@ -114,6 +114,16 @@ def test_read_enabled_missing(tmp_path: Path) -> None:
 def test_read_connector(tmp_path: Path) -> None:
     (tmp_path / "status").write_text("connected\n")
     (tmp_path / "enabled").write_text("enabled\n")
+    edid = bytearray(128)
+    edid[8:10] = bytes.fromhex("10 AC")
+
+    descriptor = bytearray(18)
+    descriptor[3] = 0xFC
+    descriptor[5:] = b"DELL U2723QE\n"
+
+    edid[54:72] = descriptor
+
+    (tmp_path / "edid").write_bytes(edid)
 
     connector = read_connector(tmp_path)
 
@@ -122,6 +132,8 @@ def test_read_connector(tmp_path: Path) -> None:
     assert connector.connected is True
     assert connector.enabled is True
     assert connector.active is True
+    assert connector.manufacturer == "DEL"
+    assert connector.monitor_name == "DELL U2723QE"
 
 
 def test_read_edid(tmp_path: Path) -> None:

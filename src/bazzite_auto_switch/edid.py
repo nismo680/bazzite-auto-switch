@@ -62,5 +62,5 @@ def parse_edid(edid: bytes) -> MonitorInfo:
 
     return MonitorInfo(
         manufacturer=decode_manufacturer(edid[8:10]),
-        monitor_name=None,
+        monitor_name=parse_monitor_name(edid),
     )

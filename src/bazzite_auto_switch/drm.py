@@ -7,6 +7,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from bazzite_auto_switch.drm_parser import parse_connector_name
+from bazzite_auto_switch.edid import parse_edid
 from bazzite_auto_switch.models import Connector
 
 DRM_PATH = Path("/sys/class/drm")
@@ -103,14 +104,24 @@ def read_connector(path: Path) -> Connector:
     """
     connector_type, number = parse_connector_name(path.name)
 
+    edid = read_edid(path)
+
+    manufacturer = None
+    monitor_name = None
+
+    if edid is not None:
+        info = parse_edid(edid)
+        manufacturer = info.manufacturer
+        monitor_name = info.monitor_name
+
     return Connector(
         drm_id=path.name,
         connector_type=connector_type,
         number=number,
         connected=read_status(path),
         enabled=read_enabled(path),
-        manufacturer=None,
-        monitor_name=None,
+        manufacturer=manufacturer,
+        monitor_name=monitor_name,
     )
 
 
