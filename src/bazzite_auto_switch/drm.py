@@ -113,3 +113,15 @@ def read_connector(path: Path) -> Connector:
         monitor_name=None,
         serial_number=None,
     )
+
+
+def read_edid(connector: Path) -> bytes | None:
+    """
+    Read the EDID of a connector.
+
+    Returns None if no EDID is available.
+    """
+    try:
+        return (connector / "edid").read_bytes()
+    except OSError:
+        return None

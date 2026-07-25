@@ -4,6 +4,7 @@ from bazzite_auto_switch.drm import (
     find_connectors,
     find_drm_cards,
     read_connector,
+    read_edid,
     read_enabled,
     read_status,
     read_text,
@@ -121,3 +122,14 @@ def test_read_connector(tmp_path: Path) -> None:
     assert connector.connected is True
     assert connector.enabled is True
     assert connector.active is True
+
+
+def test_read_edid(tmp_path: Path) -> None:
+    data = bytes(range(128))
+    (tmp_path / "edid").write_bytes(data)
+
+    assert read_edid(tmp_path) == data
+
+
+def test_read_edid_missing(tmp_path: Path) -> None:
+    assert read_edid(tmp_path) is None
