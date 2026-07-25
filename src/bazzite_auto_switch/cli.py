@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 
+from bazzite_auto_switch.commands import list as list_command
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(
@@ -21,11 +23,6 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.command == "list":
-        return cmd_list()
+        return list_command.run()
 
     return 1
-
-
-def cmd_list() -> int:
-    print("Not implemented yet.")
-    return 0
