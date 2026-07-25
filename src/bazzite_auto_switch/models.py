@@ -31,7 +31,6 @@ class Connector:
 
     monitor_name: str | None = None
     manufacturer: str | None = None
-    serial_number: str | None = None
 
     @property
     def active(self) -> bool:

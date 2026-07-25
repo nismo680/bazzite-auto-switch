@@ -111,7 +111,6 @@ def read_connector(path: Path) -> Connector:
         enabled=read_enabled(path),
         manufacturer=None,
         monitor_name=None,
-        serial_number=None,
     )
 
 
