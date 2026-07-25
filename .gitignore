@@ -17,4 +17,5 @@ build/
 *.swo
 *.kate-swp
 
-*.sh
+check.sh
+gitpush.sh
