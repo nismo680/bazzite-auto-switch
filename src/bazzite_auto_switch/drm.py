@@ -109,10 +109,15 @@ def read_connector(path: Path) -> Connector:
     manufacturer = None
     monitor_name = None
 
+    edid = read_edid(path)
     if edid is not None:
-        info = parse_edid(edid)
-        manufacturer = info.manufacturer
-        monitor_name = info.monitor_name
+        try:
+            info = parse_edid(edid)
+        except ValueError:
+            pass
+        else:
+            manufacturer = info.manufacturer
+            monitor_name = info.monitor_name
 
     return Connector(
         drm_id=path.name,

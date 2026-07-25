@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 
-from bazzite_auto_switch.commands import list as list_command
+import bazzite_auto_switch.commands.list as list_command
 
 
 def main() -> int:
