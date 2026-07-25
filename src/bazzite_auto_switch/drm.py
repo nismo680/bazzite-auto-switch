@@ -30,7 +30,6 @@ def find_connectors(card: Path) -> tuple[Path, ...]:
     Return all connector directories belonging to a DRM card.
     """
     drm_path = card.parent
-
     prefix = f"{card.name}-"
 
     return tuple(
@@ -40,3 +39,15 @@ def find_connectors(card: Path) -> tuple[Path, ...]:
             if entry.is_dir() and entry.name.startswith(prefix)
         )
     )
+
+
+def read_text(path: Path, filename: str) -> str | None:
+    """
+    Read a text file below *path*.
+
+    Returns None if the file does not exist or cannot be read.
+    """
+    try:
+        return (path / filename).read_text(encoding="utf-8").strip()
+    except OSError:
+        return None

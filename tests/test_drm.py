@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from bazzite_auto_switch.drm import find_connectors, find_drm_cards
+from bazzite_auto_switch.drm import find_connectors, find_drm_cards, read_text
 
 
 def test_find_drm_cards_empty(tmp_path: Path) -> None:
@@ -56,3 +56,13 @@ def test_find_connectors(tmp_path: Path) -> None:
         dp,
         hdmi,
     )
+
+
+def test_read_text(tmp_path: Path) -> None:
+    (tmp_path / "status").write_text("connected\n")
+
+    assert read_text(tmp_path, "status") == "connected"
+
+
+def test_read_text_missing_file(tmp_path: Path) -> None:
+    assert read_text(tmp_path, "status") is None
