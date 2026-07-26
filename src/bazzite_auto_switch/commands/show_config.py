@@ -1,0 +1,31 @@
+from __future__ import annotations
+
+from bazzite_auto_switch.config import load_config
+
+
+def run() -> int:
+    config = load_config()
+
+    print("Configuration")
+    print()
+
+    print("Mode priority:")
+    print("  " + " > ".join(mode.value.capitalize() for mode in config.mode_priority))
+    print()
+
+    count = len(config.displays)
+
+    print(f"Configured display{'s' if count != 1 else ''}: {count}")
+    print()
+
+    if count == 0:
+        print("No displays configured.")
+        return 0
+
+    for index, display in enumerate(config.displays, start=1):
+        print(f"{index}. {display.name}")
+        print(f"   Fingerprint: {display.display_fingerprint}")
+        print(f"   Mode:        {display.mode.value.capitalize()}")
+        print()
+
+    return 0
