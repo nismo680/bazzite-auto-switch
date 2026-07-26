@@ -24,6 +24,7 @@ class Config:
         Mode.DESKTOP,
         Mode.CONSOLE,
     )
+    display_settle_time: float = 2.0
     displays: tuple[DisplayConfig, ...] = field(default_factory=tuple)
 
 
@@ -34,18 +35,23 @@ def load_config() -> Config:
     with CONFIG_FILE.open("r", encoding="utf-8") as file:
         data = yaml.safe_load(file) or {}
 
+    preferences = data.get("preferences", {})
+
     session_priority = tuple(
         Mode(mode)
-        for mode in data.get(
-            "preferences",
-            {},
-        ).get(
+        for mode in preferences.get(
             "session_priority",
             [
                 "desktop",
                 "console",
-                "handheld",
             ],
+        )
+    )
+
+    display_settle_time = float(
+        preferences.get(
+            "display_settle_time",
+            2.0,
         )
     )
 
@@ -62,6 +68,7 @@ def load_config() -> Config:
 
     return Config(
         session_priority=session_priority,
+        display_settle_time=display_settle_time,
         displays=tuple(displays),
     )
 
@@ -70,7 +77,10 @@ def save_config(config: Config) -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
     data = {
-        "preferences": {"session_priority": [mode.value for mode in config.session_priority]},
+        "preferences": {
+            "session_priority": [mode.value for mode in config.session_priority],
+            "display_settle_time": config.display_settle_time,
+        },
         "displays": {
             display.display_fingerprint: {
                 "name": display.name,
@@ -102,5 +112,6 @@ def update_display(
 
     return Config(
         session_priority=config.session_priority,
+        display_settle_time=config.display_settle_time,
         displays=tuple(displays),
     )

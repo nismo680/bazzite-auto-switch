@@ -16,17 +16,20 @@ def run() -> int:
     gpus = read_gpus()
     config = load_config()
 
-    desired_mode = decide_mode(
+    desired_session = decide_mode(
         gpus,
         config,
     )
 
-    if desired_mode is Mode.DESKTOP:
-        if not is_plasma_running():
-            switch_to_desktop()
+    if desired_session is Mode.DESKTOP:
+        if is_plasma_running():
+            return 0
 
-    elif desired_mode is Mode.CONSOLE:
-        if not is_gamescope_running():
-            switch_to_console()
+        switch_to_desktop()
+        return 0
 
+    if is_gamescope_running():
+        return 0
+
+    switch_to_console()
     return 0

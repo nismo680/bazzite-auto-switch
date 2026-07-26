@@ -13,6 +13,10 @@ def run() -> int:
     print("  " + " > ".join(mode.value.capitalize() for mode in config.session_priority))
     print()
 
+    print("Display settle time:")
+    print(f"  {config.display_settle_time:.1f} seconds")
+    print()
+
     count = len(config.displays)
 
     print(f"Configured display{'s' if count != 1 else ''}: {count}")

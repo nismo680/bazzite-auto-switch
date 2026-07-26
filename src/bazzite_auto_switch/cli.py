@@ -4,7 +4,7 @@ import argparse
 
 import bazzite_auto_switch.commands.list as list_command
 import bazzite_auto_switch.commands.setup_displays as setup_displays
-import bazzite_auto_switch.commands.setup_mode as setup_mode
+import bazzite_auto_switch.commands.setup_settings as setup_settings
 import bazzite_auto_switch.commands.show_config as show_config
 import bazzite_auto_switch.commands.status as status
 
@@ -39,8 +39,8 @@ def main() -> int:
     )
 
     setup_subparsers.add_parser(
-        "mode",
-        help="Configure mode priority.",
+        "settings",
+        help="Configure session priority.",
     )
 
     show_parser = subparsers.add_parser(
@@ -77,8 +77,8 @@ def main() -> int:
         if args.setup_command == "displays":
             return setup_displays.run()
 
-        if args.setup_command == "mode":
-            return setup_mode.run()
+        if args.setup_command == "settings":
+            return setup_settings.run()
 
     if args.command == "show":
         if args.show_command is None:

@@ -5,6 +5,8 @@ from bazzite_auto_switch.modes import Mode
 
 
 def run() -> int:
+    config = load_config()
+
     print("Preferred session priority:\n")
     print("  1) Desktop")
     print("  2) Console")
@@ -29,11 +31,33 @@ def run() -> int:
 
         print("Invalid selection.\n")
 
-    config = load_config()
+    print()
+    print("Display settle time (seconds)")
+    print(f"Current: {config.display_settle_time}")
+    print()
+
+    while True:
+        value = input("> ").strip()
+
+        if value == "":
+            display_settle_time = config.display_settle_time
+            break
+
+        try:
+            display_settle_time = float(value)
+
+            if display_settle_time <= 0:
+                raise ValueError
+
+            break
+
+        except ValueError:
+            print("Please enter a number greater than 0.\n")
 
     save_config(
         Config(
             session_priority=priority,
+            display_settle_time=display_settle_time,
             displays=config.displays,
         )
     )
