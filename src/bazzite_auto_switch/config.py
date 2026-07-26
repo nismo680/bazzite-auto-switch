@@ -20,7 +20,7 @@ class DisplayConfig:
 
 @dataclass(slots=True, frozen=True)
 class Config:
-    mode_priority: tuple[Mode, ...] = (
+    session_priority: tuple[Mode, ...] = (
         Mode.DESKTOP,
         Mode.CONSOLE,
     )
@@ -34,13 +34,13 @@ def load_config() -> Config:
     with CONFIG_FILE.open("r", encoding="utf-8") as file:
         data = yaml.safe_load(file) or {}
 
-    mode_priority = tuple(
+    session_priority = tuple(
         Mode(mode)
         for mode in data.get(
             "preferences",
             {},
         ).get(
-            "mode_priority",
+            "session_priority",
             [
                 "desktop",
                 "console",
@@ -61,7 +61,7 @@ def load_config() -> Config:
         )
 
     return Config(
-        mode_priority=mode_priority,
+        session_priority=session_priority,
         displays=tuple(displays),
     )
 
@@ -70,7 +70,7 @@ def save_config(config: Config) -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
     data = {
-        "preferences": {"mode_priority": [mode.value for mode in config.mode_priority]},
+        "preferences": {"session_priority": [mode.value for mode in config.session_priority]},
         "displays": {
             display.display_fingerprint: {
                 "name": display.name,
@@ -101,6 +101,6 @@ def update_display(
     displays.append(display)
 
     return Config(
-        mode_priority=config.mode_priority,
+        session_priority=config.session_priority,
         displays=tuple(displays),
     )

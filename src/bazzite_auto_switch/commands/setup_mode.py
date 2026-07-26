@@ -5,7 +5,7 @@ from bazzite_auto_switch.modes import Mode
 
 
 def run() -> int:
-    print("Preferred mode priority:\n")
+    print("Preferred session priority:\n")
     print("  1) Desktop")
     print("  2) Console")
     print()
@@ -33,7 +33,7 @@ def run() -> int:
 
     save_config(
         Config(
-            mode_priority=priority,
+            session_priority=priority,
             displays=config.displays,
         )
     )

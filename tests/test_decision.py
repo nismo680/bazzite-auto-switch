@@ -48,7 +48,7 @@ def test_no_active_displays_fall_back_to_priority() -> None:
     gpu = make_gpu()
 
     config = Config(
-        mode_priority=(
+        session_priority=(
             Mode.DESKTOP,
             Mode.CONSOLE,
         ),
@@ -81,7 +81,7 @@ def test_unconfigured_display_falls_back_to_priority() -> None:
     gpu = make_gpu(make_connector("internal"))
 
     config = Config(
-        mode_priority=(
+        session_priority=(
             Mode.DESKTOP,
             Mode.CONSOLE,
         ),
@@ -114,7 +114,7 @@ def test_console_has_priority_when_configured() -> None:
     )
 
     config = Config(
-        mode_priority=(
+        session_priority=(
             Mode.CONSOLE,
             Mode.DESKTOP,
         ),
@@ -131,7 +131,7 @@ def test_unknown_display_falls_back_to_priority() -> None:
     gpu = make_gpu(make_connector("unknown"))
 
     config = Config(
-        mode_priority=(
+        session_priority=(
             Mode.DESKTOP,
             Mode.CONSOLE,
         ),
@@ -149,7 +149,7 @@ def test_disconnected_display_falls_back_to_priority() -> None:
     )
 
     config = Config(
-        mode_priority=(
+        session_priority=(
             Mode.DESKTOP,
             Mode.CONSOLE,
         ),
@@ -168,7 +168,7 @@ def test_disabled_display_falls_back_to_priority() -> None:
     )
 
     config = Config(
-        mode_priority=(
+        session_priority=(
             Mode.DESKTOP,
             Mode.CONSOLE,
         ),
@@ -182,7 +182,7 @@ def test_display_without_fingerprint_falls_back_to_priority() -> None:
     gpu = make_gpu(make_connector(None))
 
     config = Config(
-        mode_priority=(
+        session_priority=(
             Mode.DESKTOP,
             Mode.CONSOLE,
         ),

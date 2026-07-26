@@ -9,8 +9,8 @@ def run() -> int:
     print("Configuration")
     print()
 
-    print("Mode priority:")
-    print("  " + " > ".join(mode.value.capitalize() for mode in config.mode_priority))
+    print("Session priority:")
+    print("  " + " > ".join(mode.value.capitalize() for mode in config.session_priority))
     print()
 
     count = len(config.displays)
