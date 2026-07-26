@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from bazzite_auto_switch.models import GPU
+from bazzite_auto_switch.models import GPU, Connector, ConnectorType
 from bazzite_auto_switch.modes import Mode
 
 
@@ -12,23 +12,34 @@ class Decision:
     reason: str
 
 
-def decide(gpus: tuple[GPU, ...]) -> Decision:
-    """
-    Determine the desired operating mode.
+def get_active_connectors(gpus: tuple[GPU, ...]) -> tuple[Connector, ...]:
+    connectors: list[Connector] = []
 
-    Currently:
-    - no active external display -> HANDHELD
-    - active external display -> not implemented
-    """
     for gpu in gpus:
         for connector in gpu.connectors:
-            if not connector.active:
-                continue
+            if connector.active:
+                connectors.append(connector)
 
-            if connector.connector_type.name != "EDP":
-                raise NotImplementedError("External display handling not implemented yet.")
+    return tuple(connectors)
 
-    return Decision(
-        mode=Mode.HANDHELD,
-        reason="no_active_external_display",
+
+def get_active_external_connectors(
+    gpus: tuple[GPU, ...],
+) -> tuple[Connector, ...]:
+    return tuple(
+        connector
+        for connector in get_active_connectors(gpus)
+        if connector.connector_type is not ConnectorType.INTERNAL
     )
+
+
+def decide(gpus: tuple[GPU, ...]) -> Decision:
+    external = get_active_external_connectors(gpus)
+
+    if not external:
+        return Decision(
+            mode=Mode.HANDHELD,
+            reason="no_active_external_display",
+        )
+
+    raise NotImplementedError("External display handling not implemented yet.")
