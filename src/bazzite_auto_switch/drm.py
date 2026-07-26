@@ -4,6 +4,7 @@ Functions for discovering DRM devices.
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
 from bazzite_auto_switch.drm_parser import parse_connector_name
@@ -104,13 +105,14 @@ def read_connector(path: Path) -> Connector:
     """
     connector_type, number = parse_connector_name(path.name)
 
-    edid = read_edid(path)
-
     manufacturer = None
     monitor_name = None
+    display_fingerprint = None
 
     edid = read_edid(path)
     if edid is not None:
+        display_fingerprint = get_display_fingerprint(edid)
+
         try:
             info = parse_edid(edid)
         except ValueError:
@@ -125,6 +127,7 @@ def read_connector(path: Path) -> Connector:
         number=number,
         connected=read_status(path),
         enabled=read_enabled(path),
+        display_fingerprint=display_fingerprint,
         manufacturer=manufacturer,
         monitor_name=monitor_name,
     )
@@ -152,9 +155,21 @@ def read_edid(connector: Path) -> bytes | None:
     """
     Read the EDID of a connector.
 
-    Returns None if no EDID is available.
+    Returns None if no valid EDID is available.
     """
     try:
-        return (connector / "edid").read_bytes()
+        edid = (connector / "edid").read_bytes()
     except OSError:
         return None
+
+    if len(edid) < 128:
+        return None
+
+    return edid
+
+
+def get_display_fingerprint(edid: bytes | None) -> str | None:
+    if edid is None:
+        return None
+
+    return hashlib.sha256(edid).hexdigest()[:12]

@@ -29,6 +29,8 @@ class Connector:
     connected: bool | None
     enabled: bool | None
 
+    display_fingerprint: str | None = None
+
     monitor_name: str | None = None
     manufacturer: str | None = None
 

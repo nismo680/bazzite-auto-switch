@@ -19,6 +19,7 @@ def _print_connector(connector: Connector) -> None:
     print(f"    Connected     {_yes_no_unknown(connector.connected)}")
     print(f"    Enabled       {_yes_no_unknown(connector.enabled)}")
     print(f"    Active        {_yes_no_unknown(connector.active)}")
+    print(f"    Fingerprint   {connector.display_fingerprint or '-'}")
     print(f"    Manufacturer  {connector.manufacturer or '-'}")
     print(f"    Monitor       {connector.monitor_name or '-'}")
 
