@@ -1,45 +1,43 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-
-from bazzite_auto_switch.models import GPU, Connector, ConnectorType
+from bazzite_auto_switch.config import Config
+from bazzite_auto_switch.models import GPU
 from bazzite_auto_switch.modes import Mode
 
 
-@dataclass(slots=True, frozen=True)
-class Decision:
-    mode: Mode
-    reason: str
-
-
-def get_active_connectors(gpus: tuple[GPU, ...]) -> tuple[Connector, ...]:
-    connectors: list[Connector] = []
+def get_active_modes(
+    gpus: tuple[GPU, ...],
+    config: Config,
+) -> set[Mode]:
+    active_modes: set[Mode] = set()
 
     for gpu in gpus:
         for connector in gpu.connectors:
-            if connector.active:
-                connectors.append(connector)
+            if not connector.active:
+                continue
 
-    return tuple(connectors)
+            fingerprint = connector.display_fingerprint
+            if fingerprint is None:
+                continue
+
+            for display in config.displays:
+                if display.display_fingerprint == fingerprint:
+                    active_modes.add(display.mode)
+                    break
+
+    return active_modes
 
 
-def get_active_external_connectors(
-    gpus: tuple[GPU, ...],
-) -> tuple[Connector, ...]:
-    return tuple(
-        connector
-        for connector in get_active_connectors(gpus)
-        if connector.connector_type is not ConnectorType.INTERNAL
-    )
+def decide_mode(
+    gpus: tuple[GPU],
+    config: Config,
+) -> Mode | None:
+    """Return the preferred mode for the active displays."""
 
+    active_modes = get_active_modes(gpus, config)
 
-def decide(gpus: tuple[GPU, ...]) -> Decision:
-    external = get_active_external_connectors(gpus)
+    for mode in config.mode_priority:
+        if mode in active_modes:
+            return mode
 
-    if not external:
-        return Decision(
-            mode=Mode.HANDHELD,
-            reason="no_active_external_display",
-        )
-
-    raise NotImplementedError("External display handling not implemented yet.")
+    return None
