@@ -22,13 +22,6 @@ def main() -> int:
         help="List detected GPUs and connectors.",
     )
 
-    subparsers.add_parser(
-        "setup",
-        help="Configure displays.",
-    )
-
-    args = parser.parse_args()
-
     setup_parser = subparsers.add_parser(
         "setup",
         help="Setup configuration.",
@@ -36,12 +29,6 @@ def main() -> int:
 
     setup_subparsers = setup_parser.add_subparsers(
         dest="setup_command",
-        required=True,
-    )
-
-    setup_subparsers.add_parser(
-        "mode",
-        help="Configure mode priority.",
     )
 
     setup_subparsers.add_parser(
@@ -49,14 +36,25 @@ def main() -> int:
         help="Configure displays.",
     )
 
+    setup_subparsers.add_parser(
+        "mode",
+        help="Configure mode priority.",
+    )
+
+    args = parser.parse_args()
+
     if args.command == "list":
         return list_command.run()
 
     if args.command == "setup":
-        if args.setup_command == "mode":
-            return setup_mode.run()
+        if args.setup_command is None:
+            setup_parser.print_help()
+            return 0
 
         if args.setup_command == "displays":
             return setup_displays.run()
+
+        if args.setup_command == "mode":
+            return setup_mode.run()
 
     return 1
