@@ -14,12 +14,17 @@ CONFIG_FILE = CONFIG_DIR / "config.yaml"
 @dataclass(slots=True, frozen=True)
 class DisplayConfig:
     display_fingerprint: str
+    name: str
     mode: Mode
-    priority: int
 
 
 @dataclass(slots=True, frozen=True)
 class Config:
+    mode_priority: tuple[Mode, ...] = (
+        Mode.DESKTOP,
+        Mode.CONSOLE,
+        Mode.HANDHELD,
+    )
     displays: tuple[DisplayConfig, ...] = field(default_factory=tuple)
 
 
@@ -30,36 +35,73 @@ def load_config() -> Config:
     with CONFIG_FILE.open("r", encoding="utf-8") as file:
         data = yaml.safe_load(file) or {}
 
+    mode_priority = tuple(
+        Mode(mode)
+        for mode in data.get(
+            "preferences",
+            {},
+        ).get(
+            "mode_priority",
+            [
+                "desktop",
+                "console",
+                "handheld",
+            ],
+        )
+    )
+
     displays: list[DisplayConfig] = []
 
     for fingerprint, values in data.get("displays", {}).items():
         displays.append(
             DisplayConfig(
                 display_fingerprint=fingerprint,
+                name=values["name"],
                 mode=Mode(values["mode"]),
-                priority=int(values["priority"]),
             )
         )
 
-    return Config(tuple(displays))
+    return Config(
+        mode_priority=mode_priority,
+        displays=tuple(displays),
+    )
 
 
 def save_config(config: Config) -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
     data = {
+        "preferences": {"mode_priority": [mode.value for mode in config.mode_priority]},
         "displays": {
             display.display_fingerprint: {
+                "name": display.name,
                 "mode": display.mode.value,
-                "priority": display.priority,
             }
             for display in config.displays
-        }
+        },
     }
 
-    with CONFIG_FILE.open("w", encoding="utf-8") as file:
+    tmp = CONFIG_FILE.with_suffix(".tmp")
+
+    with tmp.open("w", encoding="utf-8") as file:
         yaml.safe_dump(
             data,
             file,
             sort_keys=False,
         )
+
+    tmp.replace(CONFIG_FILE)
+
+
+def update_display(
+    config: Config,
+    display: DisplayConfig,
+) -> Config:
+    displays = [d for d in config.displays if d.display_fingerprint != display.display_fingerprint]
+
+    displays.append(display)
+
+    return Config(
+        mode_priority=config.mode_priority,
+        displays=tuple(displays),
+    )
