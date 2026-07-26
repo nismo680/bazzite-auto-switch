@@ -9,19 +9,15 @@ from bazzite_auto_switch.config import (
 from bazzite_auto_switch.drm import read_gpus
 from bazzite_auto_switch.modes import Mode
 
-MODE_MAP = {
-    "1": Mode.HANDHELD,
-    "2": Mode.DESKTOP,
-    "3": Mode.CONSOLE,
-}
+MODE_MAP = {"1": Mode.DESKTOP, "2": Mode.CONSOLE, "3": Mode.UNCONFIGURED}
 
 
 def select_mode() -> Mode:
     while True:
         print("Select mode:")
-        print("  1) Handheld")
-        print("  2) Desktop")
-        print("  3) Console")
+        print("  1) Desktop")
+        print("  2) Console")
+        print("  3) Unconfigured (no auto switch)")
         print()
 
         choice = input("> ").strip()

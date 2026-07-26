@@ -17,7 +17,6 @@ def run() -> int:
             priority = (
                 Mode.DESKTOP,
                 Mode.CONSOLE,
-                Mode.HANDHELD,
             )
             break
 
@@ -25,7 +24,6 @@ def run() -> int:
             priority = (
                 Mode.CONSOLE,
                 Mode.DESKTOP,
-                Mode.HANDHELD,
             )
             break
 

@@ -4,6 +4,6 @@ from enum import Enum
 
 
 class Mode(Enum):
-    HANDHELD = "handheld"
+    UNCONFIGURED = "unconfigured"
     CONSOLE = "console"
     DESKTOP = "desktop"

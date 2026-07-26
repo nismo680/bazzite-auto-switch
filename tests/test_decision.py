@@ -44,12 +44,17 @@ def make_display(
     )
 
 
-def test_no_active_displays_returns_none() -> None:
+def test_no_active_displays_fall_back_to_priority() -> None:
     gpu = make_gpu()
 
-    config = Config()
+    config = Config(
+        mode_priority=(
+            Mode.DESKTOP,
+            Mode.CONSOLE,
+        ),
+    )
 
-    assert decide_mode((gpu,), config) is None
+    assert decide_mode((gpu,), config) is Mode.DESKTOP
 
 
 def test_desktop_display_is_selected() -> None:
@@ -62,16 +67,6 @@ def test_desktop_display_is_selected() -> None:
     assert decide_mode((gpu,), config) is Mode.DESKTOP
 
 
-def test_handheld_display_is_selected() -> None:
-    gpu = make_gpu(make_connector("handheld"))
-
-    config = Config(
-        displays=(make_display("handheld", Mode.HANDHELD),),
-    )
-
-    assert decide_mode((gpu,), config) is Mode.HANDHELD
-
-
 def test_console_display_is_selected() -> None:
     gpu = make_gpu(make_connector("console"))
 
@@ -82,16 +77,30 @@ def test_console_display_is_selected() -> None:
     assert decide_mode((gpu,), config) is Mode.CONSOLE
 
 
-def test_desktop_has_priority_over_handheld() -> None:
+def test_unconfigured_display_falls_back_to_priority() -> None:
+    gpu = make_gpu(make_connector("internal"))
+
+    config = Config(
+        mode_priority=(
+            Mode.DESKTOP,
+            Mode.CONSOLE,
+        ),
+        displays=(make_display("internal", Mode.UNCONFIGURED),),
+    )
+
+    assert decide_mode((gpu,), config) is Mode.DESKTOP
+
+
+def test_desktop_has_priority_over_console() -> None:
     gpu = make_gpu(
         make_connector("desktop"),
-        make_connector("handheld"),
+        make_connector("console"),
     )
 
     config = Config(
         displays=(
             make_display("desktop", Mode.DESKTOP),
-            make_display("handheld", Mode.HANDHELD),
+            make_display("console", Mode.CONSOLE),
         ),
     )
 
@@ -108,7 +117,6 @@ def test_console_has_priority_when_configured() -> None:
         mode_priority=(
             Mode.CONSOLE,
             Mode.DESKTOP,
-            Mode.HANDHELD,
         ),
         displays=(
             make_display("desktop", Mode.DESKTOP),
@@ -119,15 +127,20 @@ def test_console_has_priority_when_configured() -> None:
     assert decide_mode((gpu,), config) is Mode.CONSOLE
 
 
-def test_unknown_display_is_ignored() -> None:
+def test_unknown_display_falls_back_to_priority() -> None:
     gpu = make_gpu(make_connector("unknown"))
 
-    config = Config()
+    config = Config(
+        mode_priority=(
+            Mode.DESKTOP,
+            Mode.CONSOLE,
+        ),
+    )
 
-    assert decide_mode((gpu,), config) is None
+    assert decide_mode((gpu,), config) is Mode.DESKTOP
 
 
-def test_disconnected_display_is_ignored() -> None:
+def test_disconnected_display_falls_back_to_priority() -> None:
     gpu = make_gpu(
         make_connector(
             "desktop",
@@ -136,13 +149,17 @@ def test_disconnected_display_is_ignored() -> None:
     )
 
     config = Config(
+        mode_priority=(
+            Mode.DESKTOP,
+            Mode.CONSOLE,
+        ),
         displays=(make_display("desktop", Mode.DESKTOP),),
     )
 
-    assert decide_mode((gpu,), config) is None
+    assert decide_mode((gpu,), config) is Mode.DESKTOP
 
 
-def test_disabled_display_is_ignored() -> None:
+def test_disabled_display_falls_back_to_priority() -> None:
     gpu = make_gpu(
         make_connector(
             "desktop",
@@ -151,17 +168,25 @@ def test_disabled_display_is_ignored() -> None:
     )
 
     config = Config(
+        mode_priority=(
+            Mode.DESKTOP,
+            Mode.CONSOLE,
+        ),
         displays=(make_display("desktop", Mode.DESKTOP),),
     )
 
-    assert decide_mode((gpu,), config) is None
+    assert decide_mode((gpu,), config) is Mode.DESKTOP
 
 
-def test_display_without_fingerprint_is_ignored() -> None:
+def test_display_without_fingerprint_falls_back_to_priority() -> None:
     gpu = make_gpu(make_connector(None))
 
     config = Config(
+        mode_priority=(
+            Mode.DESKTOP,
+            Mode.CONSOLE,
+        ),
         displays=(make_display("desktop", Mode.DESKTOP),),
     )
 
-    assert decide_mode((gpu,), config) is None
+    assert decide_mode((gpu,), config) is Mode.DESKTOP

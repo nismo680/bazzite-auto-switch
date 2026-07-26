@@ -40,4 +40,4 @@ def decide_mode(
         if mode in active_modes:
             return mode
 
-    return None
+    return config.mode_priority[0]

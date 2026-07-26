@@ -23,7 +23,6 @@ class Config:
     mode_priority: tuple[Mode, ...] = (
         Mode.DESKTOP,
         Mode.CONSOLE,
-        Mode.HANDHELD,
     )
     displays: tuple[DisplayConfig, ...] = field(default_factory=tuple)
 
