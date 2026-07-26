@@ -29,7 +29,7 @@ def get_active_modes(
 
 
 def decide_mode(
-    gpus: tuple[GPU],
+    gpus: tuple[GPU, ...],
     config: Config,
 ) -> Mode | None:
     """Return the preferred mode for the active displays."""

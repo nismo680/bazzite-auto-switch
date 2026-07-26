@@ -6,6 +6,7 @@ import bazzite_auto_switch.commands.list as list_command
 import bazzite_auto_switch.commands.setup_displays as setup_displays
 import bazzite_auto_switch.commands.setup_mode as setup_mode
 import bazzite_auto_switch.commands.show_config as show_config
+import bazzite_auto_switch.commands.status as status
 
 
 def main() -> int:
@@ -56,6 +57,11 @@ def main() -> int:
         help="Show configuration.",
     )
 
+    subparsers.add_parser(
+        "status",
+        help="Show current status.",
+    )
+
     # Parser
     args = parser.parse_args()
 
@@ -81,5 +87,8 @@ def main() -> int:
 
         if args.show_command == "config":
             return show_config.run()
+
+    if args.command == "status":
+        return status.run()
 
     return 1
