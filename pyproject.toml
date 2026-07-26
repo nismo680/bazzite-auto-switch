@@ -15,6 +15,7 @@ authors = [
 
 dependencies = [
     "pyudev>=0.24",
+    "PyYAML>=6.0",
 ]
 
 [project.optional-dependencies]
@@ -22,6 +23,7 @@ dev = [
     "mypy",
     "pytest",
     "ruff",
+    "types-PyYAML",
 ]
 
 [project.scripts]
@@ -51,3 +53,5 @@ select = [
 python_version = "3.12"
 strict = true
 packages = ["bazzite_auto_switch"]
+
+
