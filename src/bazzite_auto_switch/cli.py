@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import argparse
 
+import bazzite_auto_switch.commands.disable as disable
+import bazzite_auto_switch.commands.enable as enable
 import bazzite_auto_switch.commands.list as list_command
 import bazzite_auto_switch.commands.setup_displays as setup_displays
 import bazzite_auto_switch.commands.setup_settings as setup_settings
 import bazzite_auto_switch.commands.show_config as show_config
 import bazzite_auto_switch.commands.status as status
+import bazzite_auto_switch.daemon as daemon
 
 
 def main() -> int:
@@ -40,7 +43,7 @@ def main() -> int:
 
     setup_subparsers.add_parser(
         "settings",
-        help="Configure session priority.",
+        help="Configure settings.",
     )
 
     show_parser = subparsers.add_parser(
@@ -62,10 +65,33 @@ def main() -> int:
         help="Show current status.",
     )
 
-    # Parser
+    subparsers.add_parser(
+        "enable",
+        help="Enable automatic switching.",
+    )
+
+    subparsers.add_parser(
+        "disable",
+        help="Disable automatic switching.",
+    )
+
+    subparsers.add_parser(
+        "daemon",
+        help="Run display event daemon.",
+    )
+
+    subparsers.add_parser(
+        "install",
+        help="Install the systemd user service.",
+    )
+
+    subparsers.add_parser(
+        "uninstall",
+        help="Remove the systemd user service.",
+    )
+
     args = parser.parse_args()
 
-    # Dispatch
     if args.command == "list":
         return list_command.run()
 
@@ -90,5 +116,20 @@ def main() -> int:
 
     if args.command == "status":
         return status.run()
+
+    if args.command == "enable":
+        return enable.run()
+
+    if args.command == "disable":
+        return disable.run()
+
+    if args.command == "daemon":
+        return daemon.run()
+
+    if args.command == "install":
+        raise NotImplementedError
+
+    if args.command == "uninstall":
+        raise NotImplementedError
 
     return 1

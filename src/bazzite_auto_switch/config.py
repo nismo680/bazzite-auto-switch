@@ -20,6 +20,7 @@ class DisplayConfig:
 
 @dataclass(slots=True, frozen=True)
 class Config:
+    automatic_switching: bool = True
     session_priority: tuple[Mode, ...] = (
         Mode.DESKTOP,
         Mode.CONSOLE,
@@ -36,6 +37,13 @@ def load_config() -> Config:
         data = yaml.safe_load(file) or {}
 
     preferences = data.get("preferences", {})
+
+    automatic_switching = bool(
+        preferences.get(
+            "automatic_switching",
+            True,
+        )
+    )
 
     session_priority = tuple(
         Mode(mode)
@@ -67,6 +75,7 @@ def load_config() -> Config:
         )
 
     return Config(
+        automatic_switching=automatic_switching,
         session_priority=session_priority,
         display_settle_time=display_settle_time,
         displays=tuple(displays),
@@ -78,6 +87,7 @@ def save_config(config: Config) -> None:
 
     data = {
         "preferences": {
+            "automatic_switching": config.automatic_switching,
             "session_priority": [mode.value for mode in config.session_priority],
             "display_settle_time": config.display_settle_time,
         },
@@ -111,7 +121,44 @@ def update_display(
     displays.append(display)
 
     return Config(
+        automatic_switching=config.automatic_switching,
         session_priority=config.session_priority,
         display_settle_time=config.display_settle_time,
         displays=tuple(displays),
+    )
+
+
+def set_automatic_switching(
+    config: Config,
+    enabled: bool,
+) -> Config:
+    return Config(
+        automatic_switching=enabled,
+        session_priority=config.session_priority,
+        display_settle_time=config.display_settle_time,
+        displays=config.displays,
+    )
+
+
+def set_session_priority(
+    config: Config,
+    session_priority: tuple[Mode, ...],
+) -> Config:
+    return Config(
+        automatic_switching=config.automatic_switching,
+        session_priority=session_priority,
+        display_settle_time=config.display_settle_time,
+        displays=config.displays,
+    )
+
+
+def set_display_settle_time(
+    config: Config,
+    display_settle_time: float,
+) -> Config:
+    return Config(
+        automatic_switching=config.automatic_switching,
+        session_priority=config.session_priority,
+        display_settle_time=display_settle_time,
+        displays=config.displays,
     )

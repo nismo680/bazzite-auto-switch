@@ -3,55 +3,75 @@ from __future__ import annotations
 from bazzite_auto_switch.config import load_config
 from bazzite_auto_switch.decision import decide_mode
 from bazzite_auto_switch.drm import read_gpus
+from bazzite_auto_switch.modes import Mode
+from bazzite_auto_switch.session import (
+    is_gamescope_running,
+    is_plasma_running,
+)
 
 
 def run() -> int:
-    gpus = read_gpus()
     config = load_config()
+    gpus = read_gpus()
 
-    mode = decide_mode(
+    desired_session = decide_mode(
         gpus,
         config,
     )
 
+    if is_plasma_running():
+        current_session = Mode.DESKTOP
+    elif is_gamescope_running():
+        current_session = Mode.CONSOLE
+    else:
+        current_session = None
+
     print("Status")
     print()
 
-    print(
-        "Current mode:",
-        mode.value.capitalize() if mode is not None else "Unknown",
-    )
+    print("Current session:")
+    if current_session is None:
+        print("  Unknown")
+    else:
+        print(f"  {current_session.value.capitalize()}")
+
     print()
 
-    print("Active displays:")
+    print("Desired session:")
+    print(f"  {desired_session.value.capitalize()}")
+
     print()
+
+    print("Automatic switching:")
+    print("  Enabled" if config.automatic_switching else "  Disabled")
+
+    print()
+
+    print("Display settle time:")
+    print(f"  {config.display_settle_time:.1f} s")
+
+    print()
+
+    print("Configured displays:")
+    print(f"  {len(config.displays)}")
+
+    print()
+
+    print("Detected displays:")
 
     found = False
 
     for gpu in gpus:
         for connector in gpu.connectors:
-            if not connector.active:
+            if connector.display_fingerprint is None:
                 continue
 
-            fingerprint = connector.display_fingerprint
-            if fingerprint is None:
-                continue
+            found = True
 
-            for display in config.displays:
-                if display.display_fingerprint != fingerprint:
-                    continue
-
-                found = True
-
-                print(display.name)
-                print(f"  Fingerprint: {display.display_fingerprint}")
-                print(f"  Mode:        {display.mode.value.capitalize()}")
-                print()
-
-                break
+            print(f"  {connector.monitor_name or connector.drm_id}")
+            print(f"    Fingerprint: {connector.display_fingerprint}")
 
     if not found:
-        print("None")
-        print()
+        print("  None")
 
     return 0
