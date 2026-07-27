@@ -4,11 +4,13 @@ import argparse
 
 import bazzite_auto_switch.commands.disable as disable
 import bazzite_auto_switch.commands.enable as enable
+import bazzite_auto_switch.commands.install as install
 import bazzite_auto_switch.commands.list as list_command
 import bazzite_auto_switch.commands.setup_displays as setup_displays
 import bazzite_auto_switch.commands.setup_settings as setup_settings
 import bazzite_auto_switch.commands.show_config as show_config
 import bazzite_auto_switch.commands.status as status
+import bazzite_auto_switch.commands.uninstall as uninstall
 import bazzite_auto_switch.daemon as daemon
 
 
@@ -127,9 +129,9 @@ def main() -> int:
         return daemon.run()
 
     if args.command == "install":
-        raise NotImplementedError
+        return install.run()
 
     if args.command == "uninstall":
-        raise NotImplementedError
+        return uninstall.run()
 
     return 1
