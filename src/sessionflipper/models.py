@@ -36,7 +36,7 @@ class Connector:
 
     @property
     def active(self) -> bool:
-        return self.connected is True and self.enabled is True
+        return self.connected is True
 
 
 @dataclass(slots=True, frozen=True)
