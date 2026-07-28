@@ -9,9 +9,8 @@ class DisplayEvents:
 
         self._monitor = pyudev.Monitor.from_netlink(context)
         self._monitor.filter_by(subsystem="drm")
-        self._monitor.start()
 
     def wait(self) -> None:
-        for device in self._monitor:
-            print(device.action, device.subsystem, dict(device))
+        for event in self._monitor:
+            print(repr(event))
             return
