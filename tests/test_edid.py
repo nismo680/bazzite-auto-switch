@@ -1,4 +1,4 @@
-from bazzite_auto_switch.edid import (
+from sessionflipper.edid import (
     MonitorInfo,
     decode_manufacturer,
     parse_edid,

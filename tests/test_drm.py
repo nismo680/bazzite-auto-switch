@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from bazzite_auto_switch.drm import (
+from sessionflipper.drm import (
     find_connectors,
     find_drm_cards,
     read_connector,
@@ -9,7 +9,7 @@ from bazzite_auto_switch.drm import (
     read_status,
     read_text,
 )
-from bazzite_auto_switch.models import ConnectorType
+from sessionflipper.models import ConnectorType
 
 
 def test_find_drm_cards_empty(tmp_path: Path) -> None:

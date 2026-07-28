@@ -3,7 +3,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-SERVICE_NAME = "bazzite-auto-switch.service"
+SERVICE_NAME = "sessionflipper.service"
 
 
 def service_path() -> Path:
@@ -20,7 +20,7 @@ Description=Bazzite Auto Switch
 
 [Service]
 Type=simple
-ExecStart=bazzite-auto-switch daemon
+ExecStart=sessionflipper daemon
 Restart=on-failure
 
 [Install]

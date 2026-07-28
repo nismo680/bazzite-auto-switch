@@ -1,0 +1,14 @@
+python -m venv .venv
+
+source .venv/bin/activate
+
+pip install -e ".[dev]"
+
+ruff format .
+ruff check  .
+mypy src
+pytest
+
+git add .
+git comit -m " "
+git pull

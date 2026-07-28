@@ -7,9 +7,9 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
-from bazzite_auto_switch.drm_parser import parse_connector_name
-from bazzite_auto_switch.edid import parse_edid
-from bazzite_auto_switch.models import GPU, Connector
+from sessionflipper.drm_parser import parse_connector_name
+from sessionflipper.edid import parse_edid
+from sessionflipper.models import GPU, Connector
 
 DRM_PATH = Path("/sys/class/drm")
 

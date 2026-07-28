@@ -1,5 +1,5 @@
-from bazzite_auto_switch.drm_parser import parse_connector_name
-from bazzite_auto_switch.models import ConnectorType
+from sessionflipper.drm_parser import parse_connector_name
+from sessionflipper.models import ConnectorType
 
 
 def test_parse_displayport() -> None:

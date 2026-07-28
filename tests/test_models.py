@@ -1,4 +1,4 @@
-from bazzite_auto_switch.models import GPU, Connector, ConnectorType
+from sessionflipper.models import GPU, Connector, ConnectorType
 
 
 def test_create_connector() -> None:

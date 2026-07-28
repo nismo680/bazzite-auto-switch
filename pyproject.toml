@@ -3,9 +3,9 @@ requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
-name = "bazzite-auto-switch"
+name = "sessionflipper"
 version = "0.1.0.dev0"
-description = "Automatically switch between Bazzite Gaming Mode and KDE Desktop."
+description = "Automatic Desktop ↔ Console session switching for systems using steamos-session-select."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
@@ -27,10 +27,10 @@ dev = [
 ]
 
 [project.scripts]
-bazzite-auto-switch = "bazzite_auto_switch.cli:main"
+sessionflipper = "sessionflipper.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/bazzite_auto_switch"]
+packages = ["src/sessionflipper"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -52,6 +52,12 @@ select = [
 [tool.mypy]
 python_version = "3.12"
 strict = true
-packages = ["bazzite_auto_switch"]
+packages = ["sessionflipper"]
 
+[[tool.mypy.overrides]]
+module = ["pyudev"]
+ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = ["yaml"]
+ignore_missing_imports = true

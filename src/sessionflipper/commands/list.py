@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.drm import read_gpus
-from bazzite_auto_switch.models import Connector
+from sessionflipper.drm import read_gpus
+from sessionflipper.models import Connector
 
 
 def _yes_no_unknown(value: bool | None) -> str:

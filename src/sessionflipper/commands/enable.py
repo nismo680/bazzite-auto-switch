@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.config import (
+from sessionflipper.config import (
     load_config,
     save_config,
     set_automatic_switching,
@@ -13,7 +13,7 @@ def run() -> int:
     save_config(
         set_automatic_switching(
             config,
-            False,
+            True,
         )
     )
 

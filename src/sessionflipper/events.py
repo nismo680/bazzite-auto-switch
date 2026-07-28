@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import pyudev  # type: ignore[import-untyped]
+import pyudev
 
 
 class DisplayEvents:

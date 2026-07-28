@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.config import Config
-from bazzite_auto_switch.models import GPU
-from bazzite_auto_switch.modes import Mode
+from sessionflipper.config import Config
+from sessionflipper.models import GPU
+from sessionflipper.modes import Mode
 
 
 def get_active_modes(

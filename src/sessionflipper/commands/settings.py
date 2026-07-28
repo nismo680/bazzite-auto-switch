@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.config import Config, load_config, save_config
-from bazzite_auto_switch.modes import Mode
+from sessionflipper.config import Config, load_config, save_config
+from sessionflipper.modes import Mode
 
 
 def run() -> int:

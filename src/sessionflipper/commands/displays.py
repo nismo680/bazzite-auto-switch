@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.config import (
+from sessionflipper.config import (
     DisplayConfig,
     load_config,
     save_config,
     update_display,
 )
-from bazzite_auto_switch.drm import read_gpus
-from bazzite_auto_switch.modes import Mode
+from sessionflipper.drm import read_gpus
+from sessionflipper.modes import Mode
 
 MODE_MAP = {"1": Mode.DESKTOP, "2": Mode.CONSOLE, "3": Mode.UNCONFIGURED}
 

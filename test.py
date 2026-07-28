@@ -1,4 +1,4 @@
-from bazzite_auto_switch.drm import find_connectors, find_drm_cards
+from sessionflipper.drm import find_connectors, find_drm_cards
 
 for card in find_drm_cards():
     print(card)

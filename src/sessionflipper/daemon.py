@@ -3,9 +3,9 @@ from __future__ import annotations
 import logging
 import time
 
-from bazzite_auto_switch.config import load_config
-from bazzite_auto_switch.events import DisplayEvents
-from bazzite_auto_switch.once import run as run_once
+from sessionflipper.config import load_config
+from sessionflipper.events import DisplayEvents
+from sessionflipper.once import run as run_once
 
 
 def run() -> int:

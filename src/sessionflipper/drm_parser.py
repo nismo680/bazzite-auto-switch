@@ -4,7 +4,7 @@ Helper functions for parsing DRM connector names.
 
 from __future__ import annotations
 
-from bazzite_auto_switch.models import ConnectorType
+from sessionflipper.models import ConnectorType
 
 _CONNECTOR_TYPES: dict[str, ConnectorType] = {
     "DP": ConnectorType.DISPLAYPORT,

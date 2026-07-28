@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.config import load_config
+from sessionflipper.config import load_config
 
 
 def run() -> int:

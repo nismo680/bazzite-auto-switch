@@ -5,9 +5,9 @@ from pathlib import Path
 
 import yaml
 
-from bazzite_auto_switch.modes import Mode
+from sessionflipper.modes import Mode
 
-CONFIG_DIR = Path.home() / ".config" / "bazzite-auto-switch"
+CONFIG_DIR = Path.home() / ".config" / "sessionflipper"
 CONFIG_FILE = CONFIG_DIR / "config.yaml"
 
 

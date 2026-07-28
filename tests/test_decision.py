@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.config import Config, DisplayConfig
-from bazzite_auto_switch.decision import decide_mode
-from bazzite_auto_switch.models import GPU, Connector, ConnectorType
-from bazzite_auto_switch.modes import Mode
+from sessionflipper.config import Config, DisplayConfig
+from sessionflipper.decision import decide_mode
+from sessionflipper.models import GPU, Connector, ConnectorType
+from sessionflipper.modes import Mode
 
 
 def make_connector(

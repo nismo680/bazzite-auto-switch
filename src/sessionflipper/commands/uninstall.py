@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.systemd import (
+from sessionflipper.systemd import (
     daemon_reload,
     disable_service,
     remove_service,

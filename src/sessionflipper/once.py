@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from bazzite_auto_switch.config import load_config
-from bazzite_auto_switch.decision import decide_mode
-from bazzite_auto_switch.drm import read_gpus
-from bazzite_auto_switch.modes import Mode
-from bazzite_auto_switch.session import (
+from sessionflipper.config import load_config
+from sessionflipper.decision import decide_mode
+from sessionflipper.drm import read_gpus
+from sessionflipper.modes import Mode
+from sessionflipper.session import (
     is_gamescope_running,
     is_plasma_running,
     switch_to_console,
