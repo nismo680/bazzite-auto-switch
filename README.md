@@ -1,48 +1,41 @@
 ````markdown
 # SessionFlipper
 
-<p align="center">
-  <b>Automatic Desktop ↔ Console session switching for Linux systems using <code>steamos-session-select</code>.</b>
-</p>
-
-<p align="center">
+> Automatic Desktop ↔ Console session switching for Linux systems using
+> `steamos-session-select`.
 
 ![Python](https://img.shields.io/badge/Python-3.12+-blue)
 ![Linux](https://img.shields.io/badge/Linux-systemd-green)
 ![Status](https://img.shields.io/badge/Status-Active%20Development-orange)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-</p>
-
 ---
 
 SessionFlipper automatically switches between **Desktop** and **Console**
 sessions based on your connected displays.
 
-It monitors **DRM hotplug events** instead of polling and uses the official
-`steamos-session-select` command to perform the session switch.
+Instead of polling, SessionFlipper listens for **Linux DRM hotplug events** and
+uses the official `steamos-session-select` command to switch sessions.
 
-Whether you dock your handheld, connect external monitors or move between your
-desk and your TV, SessionFlipper automatically selects the appropriate session.
-
----
+Whether you dock your handheld, connect an external monitor or move from your
+desk to your TV, SessionFlipper automatically selects the appropriate session.
 
 > [!WARNING]
 > ## Project Status
 >
-> **SessionFlipper is under active development.**
+> SessionFlipper is currently under active development.
 >
-> The core functionality is already working and used daily, but the project is
-> not yet feature complete.
+> The core functionality is already implemented and used daily, but the project
+> is not yet feature complete.
 >
-> ### Current status
+> **Current progress**
 >
 > - ✅ DRM hotplug detection
-> - ✅ Automatic Desktop ↔ Console switching
+> - ✅ Automatic Desktop ↔ Console session switching
 > - ✅ Display profile configuration
 > - ✅ Configurable switching delay
 > - ✅ systemd user service
-> - ✅ Manual enable/disable
+> - ✅ Enable / Disable automatic switching
 > - 🚧 KDE system tray application
 > - 🚧 Documentation
 > - 🚧 First public release
@@ -66,26 +59,28 @@ desk and your TV, SessionFlipper automatically selects the appropriate session.
 - Configurable display settle delay
 - Runs as a systemd user service
 - KDE system tray integration *(planned)*
-- Lightweight with minimal dependencies
+- Lightweight
+- Minimal dependencies
+- No root or sudo required
 
 ---
 
 # How it works
 
-Whenever a display is connected or disconnected, the Linux DRM subsystem emits
-a hotplug event.
+Whenever a display is connected or disconnected, Linux generates a DRM hotplug
+event.
 
-SessionFlipper receives this event, waits for the configured settle delay,
-determines the matching display profile and automatically switches to the
-appropriate session.
+SessionFlipper waits for the configured settle delay, determines which display
+profile matches the current hardware configuration and automatically switches to
+the appropriate session.
 
 Typical examples:
 
-| Displays | Session |
-|----------|---------|
+| Display configuration | Selected session |
+|----------------------|------------------|
 | Internal display only | Console |
 | Dock connected | Desktop |
-| External monitor | Desktop |
+| External monitor connected | Desktop |
 | TV connected | Console *(if configured)* |
 
 ---
@@ -94,30 +89,32 @@ Typical examples:
 
 ## Officially tested
 
-- ✅ Bazzite
+| Distribution | Status |
+|--------------|--------|
+| Bazzite | ✅ Tested |
 
 ## Community testing wanted
 
 SessionFlipper is designed for Linux distributions providing
 `steamos-session-select`.
 
-This should include systems such as:
+This is expected to include systems such as:
 
 - SteamOS
 - ChimeraOS
 - other compatible distributions
 
-Community testing is highly appreciated.
+If you successfully test SessionFlipper on another distribution, please open an
+issue or submit a pull request.
 
-If you've successfully tested SessionFlipper on another distribution, please
-open an issue or pull request so it can be added here.
+Community feedback is highly appreciated.
 
 ---
 
 # Requirements
 
 - Linux
-- Python 3.12+
+- Python 3.12 or newer
 - systemd
 - `steamos-session-select`
 
@@ -125,42 +122,78 @@ open an issue or pull request so it can be added here.
 
 # Installation
 
-At the moment there are no binary releases.
+There are currently no binary releases.
 
-Clone the repository and run SessionFlipper from source.
+Clone the repository:
 
 ```bash
-git clone https://github.com/<yourname>/sessionflipper.git
+git clone https://github.com/<username>/sessionflipper.git
 cd sessionflipper
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+Install SessionFlipper:
+
+```bash
+pip install -e ".[dev]"
+```
+
+---
+
+# Configuration
+
+Configure your display profiles:
+
+```bash
+sessionflipper displays
+```
+
+Configure general settings:
+
+```bash
+sessionflipper settings
+```
+
+Display the current configuration:
+
+```bash
+sessionflipper config
 ```
 
 ---
 
 # Commands
 
-```text
-sessionflipper list
-sessionflipper setup displays
-sessionflipper setup settings
-sessionflipper show config
-sessionflipper status
-sessionflipper enable
-sessionflipper disable
-sessionflipper install
-sessionflipper uninstall
-```
+| Command | Description |
+|----------|-------------|
+| `sessionflipper list` | List detected GPUs and displays |
+| `sessionflipper displays` | Configure display profiles |
+| `sessionflipper settings` | Configure general settings |
+| `sessionflipper config` | Show current configuration |
+| `sessionflipper status` | Show current status |
+| `sessionflipper enable` | Enable automatic switching |
+| `sessionflipper disable` | Disable automatic switching |
+| `sessionflipper install` | Install the systemd user service |
+| `sessionflipper uninstall` | Remove the systemd user service |
+| `sessionflipper daemon` | Start the daemon for debugging or trial use before installing|
 
 ---
 
 # Why SessionFlipper?
 
-Unlike simple polling solutions, SessionFlipper
+Unlike polling-based solutions, SessionFlipper
 
-- reacts instantly to display changes
+- reacts immediately to display changes
 - consumes virtually no CPU while idle
 - integrates cleanly with systemd
-- relies on the official SteamOS session switching mechanism
-- is designed to be lightweight and reliable
+- relies on the official `steamos-session-select`
+- is lightweight and easy to configure
 
 ---
 
@@ -169,31 +202,29 @@ Unlike simple polling solutions, SessionFlipper
 ## Near term
 
 - KDE system tray application
-- Application icon
-- Improved installer
+- SessionFlipper application icon
 - Binary releases
-- More documentation
-
-## Future ideas
-
-- Additional profile options
-- Import/export configuration
-- GUI configuration utility
-- Automatic updates
-- More community-tested distributions
+- Complete documentation
 
 ---
 
 # Contributing
 
-Contributions are welcome.
+Contributions are always welcome.
 
-If you have ideas, discover bugs or successfully test SessionFlipper on another
-distribution, please open an issue or submit a pull request.
+Please feel free to:
+
+- report bugs
+- suggest new features
+- improve the documentation
+- submit pull requests
+- test SessionFlipper on additional distributions
 
 ---
 
 # License
 
-MIT License
+Released under the MIT License.
+
+See the `LICENSE` file for details.
 ````
