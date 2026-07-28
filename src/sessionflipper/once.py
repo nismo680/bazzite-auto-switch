@@ -12,7 +12,7 @@ from sessionflipper.session import (
 )
 
 
-def run() -> int:
+def once() -> int:
     gpus = read_gpus()
     config = load_config()
 

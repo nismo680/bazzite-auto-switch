@@ -11,20 +11,20 @@ class DisplayEvents:
         self._monitor.filter_by(subsystem="drm")
 
     def wait(self) -> None:
-        for action, device in self._monitor:
-            print("------------------------------------------------------------")
-            print("DRM event")
-            print(f"action    : {action}")
-            print(f"subsystem : {device.subsystem}")
-            print(f"device    : {device.device_node}")
-            print(f"sys_path  : {device.sys_path}")
+        action, device = next(iter(self._monitor))
 
-            connector = device.get("CONNECTOR")
-            if connector is not None:
-                print(f"connector : {connector}")
+        print()
+        print("------------------------------------------------------------")
+        print("DRM hotplug event")
+        print(f"action    : {action}")
+        print(f"subsystem : {device.subsystem}")
+        print(f"device    : {device.device_node}")
+        print(f"sys_path  : {device.sys_path}")
 
-            hotplug = device.get("HOTPLUG")
-            if hotplug is not None:
-                print(f"hotplug   : {hotplug}")
+        connector = device.get("CONNECTOR")
+        if connector is not None:
+            print(f"connector : {connector}")
 
-            return
+        hotplug = device.get("HOTPLUG")
+        if hotplug is not None:
+            print(f"hotplug   : {hotplug}")

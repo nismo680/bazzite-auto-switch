@@ -1,36 +1,42 @@
 from __future__ import annotations
 
-import logging
 import time
 
 from sessionflipper.config import load_config
 from sessionflipper.events import DisplayEvents
-from sessionflipper.once import run as run_once
+from sessionflipper.once import once
 
 
 def run() -> int:
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(levelname)s: %(message)s",
-    )
+    print("============================================================")
+    print("SessionFlipper daemon")
+    print("============================================================")
 
     events = DisplayEvents()
 
-    logging.info("Daemon started.")
+    while True:
+        print()
+        print("Waiting for DRM hotplug event...")
 
-    try:
-        run_once()
+        events.wait()
 
-        while True:
-            events.wait()
+        print()
+        print("Reloading configuration...")
+        config = load_config()
 
-            config = load_config()
+        print(f"Display settle time : {config.display_settle_time:.1f} s")
+        print("Waiting...")
+        time.sleep(config.display_settle_time)
 
-            time.sleep(config.display_settle_time)
+        print()
+        print("Running display detection...")
 
-            run_once()
+        try:
+            once()
+            print("Display detection finished.")
+        except Exception:
+            import traceback
 
-    except KeyboardInterrupt:
-        logging.info("Daemon stopped.")
+            traceback.print_exc()
 
     return 0
