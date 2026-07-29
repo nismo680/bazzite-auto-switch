@@ -16,7 +16,9 @@ def run(
         print("SessionFlipper daemon")
         print("============================================================")
 
-    events = DisplayEvents()
+    events = DisplayEvents(
+        debug=debug,
+    )
 
     while True:
         if not run_once:
