@@ -4,6 +4,7 @@ import time
 import traceback
 
 from sessionflipper.config import load_config
+from sessionflipper.debug import debug_print
 from sessionflipper.events import DisplayEvents
 from sessionflipper.once import once
 
@@ -26,7 +27,7 @@ def run(
             if not run_once:
                 if debug:
                     print()
-                    print("Waiting for DRM hotplug event...")
+                    debug_print("Waiting for DRM hotplug event...")
 
                 events.wait()
 
