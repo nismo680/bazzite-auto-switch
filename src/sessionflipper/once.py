@@ -26,6 +26,8 @@ def once(
         gpus,
         config,
     )
+    if debug:
+        print(f"Desired mode: {desired_session.name}")
 
     match desired_session:
         case Mode.DESKTOP:
