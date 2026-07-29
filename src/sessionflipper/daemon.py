@@ -7,36 +7,52 @@ from sessionflipper.events import DisplayEvents
 from sessionflipper.once import once
 
 
-def run() -> int:
-    print("============================================================")
-    print("SessionFlipper daemon")
-    print("============================================================")
+def run(
+    debug: bool = False,
+    run_once: bool = False,
+) -> int:
+    if debug:
+        print("============================================================")
+        print("SessionFlipper daemon")
+        print("============================================================")
 
     events = DisplayEvents()
 
     while True:
-        print()
-        print("Waiting for DRM hotplug event...")
+        if not run_once:
+            if debug:
+                print()
+                print("Waiting for DRM hotplug event...")
 
-        events.wait()
+            events.wait()
+        if debug:
+            print()
+            print("Reloading configuration...")
 
-        print()
-        print("Reloading configuration...")
         config = load_config()
 
-        print(f"Display settle time : {config.display_settle_time:.1f} s")
-        print("Waiting...")
+        if debug:
+            print(f"Display settle time : {config.display_settle_time:.1f} s")
+            print("Waiting...")
+
         time.sleep(config.display_settle_time)
 
-        print()
-        print("Running display detection...")
+        if debug:
+            print()
+            print("Running display detection...")
 
         try:
-            once()
-            print("Display detection finished.")
+            once(debug=debug)
+
+            if debug:
+                print("Display detection finished.")
+
         except Exception:
             import traceback
 
             traceback.print_exc()
+
+        if run_once:
+            break
 
     return 0

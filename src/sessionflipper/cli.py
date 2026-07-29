@@ -6,11 +6,9 @@ import sessionflipper.commands.config as config
 import sessionflipper.commands.disable as disable
 import sessionflipper.commands.displays as displays
 import sessionflipper.commands.enable as enable
-import sessionflipper.commands.install as install
 import sessionflipper.commands.list as list_command
 import sessionflipper.commands.settings as settings
 import sessionflipper.commands.status as status
-import sessionflipper.commands.uninstall as uninstall
 import sessionflipper.daemon as daemon
 
 
@@ -59,19 +57,20 @@ def main() -> int:
         help="Disable automatic switching.",
     )
 
-    subparsers.add_parser(
+    daemon_parser = subparsers.add_parser(
         "daemon",
         help="Run display event daemon.",
     )
 
-    subparsers.add_parser(
-        "install",
-        help="Install the systemd user service.",
+    daemon_parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Show detailed debug output.",
     )
 
     subparsers.add_parser(
-        "uninstall",
-        help="Remove the systemd user service.",
+        "debug",
+        help="Run one debug analysis.",
     )
 
     args = parser.parse_args()
@@ -98,12 +97,14 @@ def main() -> int:
         return disable.run()
 
     if args.command == "daemon":
-        return daemon.run()
+        return daemon.run(
+            debug=args.debug,
+        )
 
-    if args.command == "install":
-        return install.run()
-
-    if args.command == "uninstall":
-        return uninstall.run()
+    if args.command == "debug":
+        return daemon.run(
+            debug=True,
+            run_once=True,
+        )
 
     return 1
