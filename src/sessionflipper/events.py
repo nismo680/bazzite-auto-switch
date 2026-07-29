@@ -33,5 +33,12 @@ class DisplayEvents:
                 hotplug = device.get("HOTPLUG")
                 if hotplug is not None:
                     print(f"hotplug   : {hotplug}")
-
             return
+
+    def flush(self) -> int:
+        count = 0
+
+        while self._monitor.poll(timeout=0) is not None:
+            count += 1
+
+        return count

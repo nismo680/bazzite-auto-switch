@@ -47,15 +47,17 @@ def run(
                 print("Running display detection...")
 
             try:
-                switched = once(debug=debug)
-
-                if switched:
-                    print("Switch")
+                once(debug=debug)
 
                 if debug:
                     print(f"Ignoring DRM events for {config.debounce_time:.1f} s...")
 
                 time.sleep(config.debounce_time)
+
+                discarded = events.flush()
+
+                if debug and discarded:
+                    print(f"Discarded {discarded} queued DRM event(s).")
 
                 if debug:
                     print("Display detection finished.")
