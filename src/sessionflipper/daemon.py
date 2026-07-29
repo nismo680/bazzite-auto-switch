@@ -20,6 +20,7 @@ def run(
     events = DisplayEvents(
         debug=debug,
     )
+    last_switch: float = 0.0
     try:
         while True:
             if not run_once:
@@ -41,12 +42,20 @@ def run(
 
             time.sleep(config.display_settle_time)
 
+            if not run_once and time.monotonic() - last_switch < config.debounce_time:
+                if debug:
+                    print(f"Ignoring hotplug event ({config.debounce_time:.1f} s debounce).")
+                continue
+
             if debug:
                 print()
                 print("Running display detection...")
 
             try:
-                once(debug=debug)
+                switched = once(debug=debug)
+
+                if switched:
+                    last_switch = time.monotonic()
 
                 if debug:
                     print("Display detection finished.")

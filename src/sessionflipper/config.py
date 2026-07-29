@@ -26,6 +26,7 @@ class Config:
         Mode.CONSOLE,
     )
     display_settle_time: float = 2.0
+    debounce_time: float = 3.0
     displays: tuple[DisplayConfig, ...] = field(default_factory=tuple)
 
 
@@ -63,6 +64,13 @@ def load_config() -> Config:
         )
     )
 
+    debounce_time = float(
+        preferences.get(
+            "debounce_time",
+            3.0,
+        )
+    )
+
     displays: list[DisplayConfig] = []
 
     for fingerprint, values in data.get("displays", {}).items():
@@ -78,6 +86,7 @@ def load_config() -> Config:
         automatic_switching=automatic_switching,
         session_priority=session_priority,
         display_settle_time=display_settle_time,
+        debounce_time=debounce_time,
         displays=tuple(displays),
     )
 
@@ -90,6 +99,7 @@ def save_config(config: Config) -> None:
             "automatic_switching": config.automatic_switching,
             "session_priority": [mode.value for mode in config.session_priority],
             "display_settle_time": config.display_settle_time,
+            "debounce_time": config.debounce_time,
         },
         "displays": {
             display.display_fingerprint: {
@@ -124,6 +134,7 @@ def update_display(
         automatic_switching=config.automatic_switching,
         session_priority=config.session_priority,
         display_settle_time=config.display_settle_time,
+        debounce_time=config.debounce_time,
         displays=tuple(displays),
     )
 
@@ -136,6 +147,7 @@ def set_automatic_switching(
         automatic_switching=enabled,
         session_priority=config.session_priority,
         display_settle_time=config.display_settle_time,
+        debounce_time=config.debounce_time,
         displays=config.displays,
     )
 
@@ -148,6 +160,7 @@ def set_session_priority(
         automatic_switching=config.automatic_switching,
         session_priority=session_priority,
         display_settle_time=config.display_settle_time,
+        debounce_time=config.debounce_time,
         displays=config.displays,
     )
 
@@ -160,5 +173,19 @@ def set_display_settle_time(
         automatic_switching=config.automatic_switching,
         session_priority=config.session_priority,
         display_settle_time=display_settle_time,
+        debounce_time=config.debounce_time,
+        displays=config.displays,
+    )
+
+
+def set_debounce_time(
+    config: Config,
+    debounce_time: float,
+) -> Config:
+    return Config(
+        automatic_switching=config.automatic_switching,
+        session_priority=config.session_priority,
+        display_settle_time=config.display_settle_time,
+        debounce_time=debounce_time,
         displays=config.displays,
     )

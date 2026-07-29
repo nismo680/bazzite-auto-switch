@@ -15,12 +15,12 @@ from sessionflipper.session import (
 def once(
     debug: bool = False,
     dry_run: bool = False,
-) -> int:
+) -> bool:
     gpus = read_gpus()
     config = load_config()
 
     if not config.automatic_switching:
-        return 0
+        return False
 
     desired_session = decide_mode(
         gpus,
@@ -32,22 +32,28 @@ def once(
             if is_plasma_running():
                 if debug:
                     print("Already in DESKTOP mode.")
-                return 0
+                return False
 
             print("Switching to DESKTOP.")
 
-            if not dry_run:
-                switch_to_desktop()
+            if dry_run:
+                return False
+
+            switch_to_desktop()
+            return True
 
         case Mode.CONSOLE:
             if is_gamescope_running():
                 if debug:
                     print("Already in CONSOLE mode.")
-                return 0
+                return False
 
             print("Switching to CONSOLE.")
 
-            if not dry_run:
-                switch_to_console()
+            if dry_run:
+                return False
 
-    return 0
+            switch_to_console()
+            return True
+
+    return False
