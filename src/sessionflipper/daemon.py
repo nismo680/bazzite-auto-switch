@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+import traceback
 
 from sessionflipper.config import load_config
 from sessionflipper.events import DisplayEvents
@@ -19,42 +20,46 @@ def run(
     events = DisplayEvents(
         debug=debug,
     )
+    try:
+        while True:
+            if not run_once:
+                if debug:
+                    print()
+                    print("Waiting for DRM hotplug event...")
 
-    while True:
-        if not run_once:
+                events.wait()
+
             if debug:
                 print()
-                print("Waiting for DRM hotplug event...")
+                print("Reloading configuration...")
 
-            events.wait()
-        if debug:
-            print()
-            print("Reloading configuration...")
-
-        config = load_config()
-
-        if debug:
-            print(f"Display settle time : {config.display_settle_time:.1f} s")
-            print("Waiting...")
-
-        time.sleep(config.display_settle_time)
-
-        if debug:
-            print()
-            print("Running display detection...")
-
-        try:
-            once(debug=debug)
+            config = load_config()
 
             if debug:
-                print("Display detection finished.")
+                print(f"Display settle time : {config.display_settle_time:.1f} s")
+                print("Waiting...")
 
-        except Exception:
-            import traceback
+            time.sleep(config.display_settle_time)
 
-            traceback.print_exc()
+            if debug:
+                print()
+                print("Running display detection...")
 
-        if run_once:
-            break
+            try:
+                once(debug=debug)
+
+                if debug:
+                    print("Display detection finished.")
+
+            except Exception:
+                traceback.print_exc()
+
+            if run_once:
+                break
+
+    except KeyboardInterrupt:
+        if debug:
+            print()
+            print("Daemon stopped.")
 
     return 0
