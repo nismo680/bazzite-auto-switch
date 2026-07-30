@@ -5,6 +5,7 @@ from sessionflipper.decision import decide_mode
 from sessionflipper.drm import read_gpus
 from sessionflipper.modes import Mode
 from sessionflipper.session import (
+    is_daemon_running,
     is_gamescope_running,
     is_plasma_running,
 )
@@ -47,8 +48,18 @@ def run() -> int:
 
     print()
 
+    print("Daemon:")
+    print("  Active" if is_daemon_running() else "  Inactive")
+
+    print()
+
     print("Display settle time:")
     print(f"  {config.display_settle_time:.1f} s")
+
+    print()
+
+    print("Debounce time:")
+    print(f"  {config.debounce_time:.1f} s")
 
     print()
 

@@ -39,3 +39,20 @@ def switch_to_console() -> None:
         ["steamos-session-select", "gamescope"],
         check=True,
     )
+
+
+def is_daemon_running() -> bool:
+    result = subprocess.run(
+        [
+            "systemctl",
+            "--user",
+            "is-active",
+            "--quiet",
+            "sessionflipper",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+
+    return result.returncode == 0

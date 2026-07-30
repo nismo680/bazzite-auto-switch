@@ -86,5 +86,5 @@ def run() -> int:
         return 0
 
     except KeyboardInterrupt:
-        print("\nSetup cancelled.")
+        print("\nDisplay configuration cancelled.")
         return 1

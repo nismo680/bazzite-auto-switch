@@ -17,6 +17,10 @@ def run() -> int:
     print(f"  {config.display_settle_time:.1f} seconds")
     print()
 
+    print("Debounce time:")
+    print(f"  {config.debounce_time:.1f} seconds")
+    print()
+
     count = len(config.displays)
 
     print(f"Configured display{'s' if count != 1 else ''}: {count}")

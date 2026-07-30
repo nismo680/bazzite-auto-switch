@@ -17,9 +17,14 @@ def main() -> int:
         prog="sessionflipper",
     )
 
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Show detailed debug output.",
+    )
+
     subparsers = parser.add_subparsers(
         dest="command",
-        required=True,
     )
 
     subparsers.add_parser(
@@ -57,23 +62,18 @@ def main() -> int:
         help="Disable automatic switching.",
     )
 
-    daemon_parser = subparsers.add_parser(
+    subparsers.add_parser(
         "daemon",
         help="Run display event daemon.",
     )
 
-    daemon_parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Show detailed debug output.",
-    )
-
-    subparsers.add_parser(
-        "debug",
-        help="Run one debug analysis.",
-    )
-
     args = parser.parse_args()
+
+    if args.command is None:
+        return daemon.run(
+            debug=args.debug,
+            run_once=True,
+        )
 
     if args.command == "list":
         return list_command.run()
@@ -99,12 +99,6 @@ def main() -> int:
     if args.command == "daemon":
         return daemon.run(
             debug=args.debug,
-        )
-
-    if args.command == "debug":
-        return daemon.run(
-            debug=True,
-            run_once=True,
         )
 
     return 1
